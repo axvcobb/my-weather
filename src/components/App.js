@@ -2,12 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import SearchBar from './SearchBar';
 import LocationButton from './LocationButton';
+import WeatherList from './WeatherList';
 
 class App extends React.Component {
 
   state = {
     lat: 33.753746,
-    long: -84.386330
+    long: -84.386330,
+    weatherData: null
   }
 
   onSearchSubmit = async (term) => {
@@ -18,24 +20,46 @@ class App extends React.Component {
        }
     });
 
+    const { lat, lng } = response.data.results[0].geometry.location;
+
     this.setState({
-      lat: response.data.results[0].geometry.location.lat,
-      long: response.data.results[0].geometry.location.lng })
+      lat: lat,
+      long: lng })
   }
 
-  onLocationClick = async () => {
-    /* window.navigator.geolocation.getCurrentPosition(
+  onLocationClick = () => {
+    window.navigator.geolocation.getCurrentPosition(
       position => this.setState({ lat: position.coords.latitude, long: position.coords.longitude}) ,
       err => console.log(err.message)
-    ); */
+    );
+  }
+
+  /* componentDidMount = async () => {
     const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
       params: {
         appid: process.env.REACT_APP_WEATHER_API,
         lat: this.state.lat,
-        lon: this.state.long
+        lon: this.state.long,
+        units: 'imperial'
       }
     });
-    console.log(response);
+    console.log(response.data);
+    this.setState({ weatherData: response.data });
+  } */
+
+  componentDidUpdate = async (prevState) => {
+    if (this.state.lat !== prevState.lat || this.state.long !== prevState.long) {
+      const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
+        params: {
+          appid: process.env.REACT_APP_WEATHER_API,
+          lat: this.state.lat,
+          lon: this.state.long,
+          units: 'imperial'
+        }
+      });
+      console.log(response.data);
+      this.setState({ weatherData: response.data });
+    }
   }
 
   render() {
@@ -44,7 +68,8 @@ class App extends React.Component {
         <LocationButton onClick={this.onLocationClick} />
         <SearchBar onSubmit={this.onSearchSubmit} />
         Lat: {this.state.lat} <br/>
-        Long: {this.state.long}
+        Long: {this.state.long} <br/>
+        <WeatherList data={this.state.weatherData} />
       </div>
     );
   }
