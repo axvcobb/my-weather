@@ -34,7 +34,7 @@ class App extends React.Component {
     );
   }
 
-  /* componentDidMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
       params: {
         appid: process.env.REACT_APP_WEATHER_API,
@@ -45,9 +45,10 @@ class App extends React.Component {
     });
     console.log(response.data);
     this.setState({ weatherData: response.data });
-  } */
+  }
 
   componentDidUpdate = async (prevState) => {
+
     if (this.state.lat !== prevState.lat || this.state.long !== prevState.long) {
       const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
         params: {
@@ -57,7 +58,7 @@ class App extends React.Component {
           units: 'imperial'
         }
       });
-      console.log(response.data);
+
       this.setState({ weatherData: response.data });
     }
   }
