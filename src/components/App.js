@@ -47,7 +47,7 @@ class App extends React.Component {
     this.setState({ weatherData: response.data });
   }
 
-  componentDidUpdate = async (prevState) => {
+  componentDidUpdate = async (prevProps, prevState) => {
 
     if (this.state.lat !== prevState.lat || this.state.long !== prevState.long) {
       const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
@@ -68,8 +68,6 @@ class App extends React.Component {
       <div className="ui container" style={{marginTop: '10px'}}>
         <LocationButton onClick={this.onLocationClick} />
         <SearchBar onSubmit={this.onSearchSubmit} />
-        Lat: {this.state.lat} <br/>
-        Long: {this.state.long} <br/>
         <WeatherList data={this.state.weatherData} />
       </div>
     );
