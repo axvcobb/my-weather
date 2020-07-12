@@ -9,16 +9,15 @@ class WeatherCard extends React.Component {
     var day = date.getDate().toString();
     var dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][ date.getDay() ];
 
-    return dayOfWeek + ' - ' + month + '/' + day + '/' + year;
+    return dayOfWeek + ' ' + month + '/' + day + '/' + year;
   }
 
   formatTime(unix) {
     var date = new Date(unix);
     var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
     var minutes = "0" + date.getMinutes();
-    var seconds = "0" + date.getSeconds();
 
-    return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return hours + ':' + minutes.substr(-2) + 'pm';
   }
 
   render() {
